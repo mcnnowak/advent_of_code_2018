@@ -37,12 +37,32 @@ def intersect(r1, r2):
 if __name__ == "__main__":
     puzzle_input = parse(read_input(INPUT_FILE))
 
-    # print(puzzle_input[0])
-    # print(intersect(puzzle_input[0], puzzle_input[0]))
+    points = set()
+    dupes = set()
 
-    intersection_total = 0
+    # part 1
+    for r in puzzle_input:
+        for x in range(r.get('cx'), r.get('cx') + r.get('dx')):
+            for y in range(r.get('cy'), r.get('cy') + r.get('dy')):
+                point = tuple([x, y])
+                if point in points:
+                    dupes.add(point)
+                else:
+                    points.add(point)
+
+    print(len(dupes))
+
+    # part 2
     for r1 in puzzle_input:
-        for r2 in [r for r in puzzle_input if r.get('case') > r1.get('case')]:
-            intersection_total += intersect(r1, r2)
-    
-    print(intersection_total)
+        intersected = False
+        for r2 in puzzle_input:
+            if r1.get('case') == r2.get('case'):
+                continue
+
+            if intersect(r1, r2) > 0:
+                intersected = True
+                break
+
+        if not intersected:
+            print(r1.get('case'))
+            break
